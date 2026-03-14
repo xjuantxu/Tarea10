@@ -1,74 +1,161 @@
 package biblioteca.modelo.negocio;
 
+import biblioteca.modelo.dominio.Direccion;
 import biblioteca.modelo.dominio.Usuario;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-/**
- * Clase Usuarios (paquete negocio).
- * Gestiona la colección de usuarios de la biblioteca.
- * Permite alta, baja, búsqueda y listado de usuarios.
- * Utiliza ArrayList para almacenar dinámicamente los usuarios.
- */
 public class Usuarios {
 
-    // Atributo
-    private List<Usuario> usuarios;
+    private static Usuarios instancia;
+    private Connection conexion;
 
-    // Constructor
-    public Usuarios() {
-        usuarios = new ArrayList<>();
+    private Usuarios() {
     }
 
-    public void alta(Usuario usuario) throws IllegalArgumentException {
+    public static Usuarios getInstancia() {
+        if (instancia == null) {
+            instancia = new Usuarios();
+        }
+        return instancia;
+    }
+
+    public void comenzar() {
+        conexion = MySQL.getInstancia().getConexion();
+    }
+
+    public void terminar() {
+        conexion = null;
+    }
+
+    public void alta(Usuario usuario) {
         if (usuario == null) {
             throw new IllegalArgumentException("El usuario no puede ser nulo");
         }
-        if (usuarios.contains(usuario))
+
+        if (buscar(usuario) != null) {
             throw new IllegalArgumentException("El usuario ya existe");
-
-        usuarios.add(new Usuario(usuario)); // copia profunda
-    }
-
-
-    public boolean baja(Usuario usuario) {
-        if (usuario == null)
-            return false;
-
-        if (usuarios.contains(usuario)) {
-            usuarios.remove(usuario);
-            return true;
         }
 
-        return false;
+        String sqlUsuario = """
+                INSERT INTO usuario (dni, nombre, email)
+                VALUES (?, ?, ?)
+                """;
+
+        String sqlDireccion = """
+                INSERT INTO direccion (dni, via, numero, cp, localidad)
+                VALUES (?, ?, ?, ?, ?)
+                """;
+
+        try (PreparedStatement psUsuario = conexion.prepareStatement(sqlUsuario);
+             PreparedStatement psDireccion = conexion.prepareStatement(sqlDireccion)) {
+
+            psUsuario.setString(1, usuario.getDni());
+            psUsuario.setString(2, usuario.getNombre());
+            psUsuario.setString(3, usuario.getEmail());
+            psUsuario.executeUpdate();
+
+            Direccion direccion = usuario.getDireccion();
+            psDireccion.setString(1, usuario.getDni());
+            psDireccion.setString(2, direccion.getVia());
+            psDireccion.setString(3, direccion.getNumero());
+            psDireccion.setString(4, direccion.getCp());
+            psDireccion.setString(5, direccion.getLocalidad());
+            psDireccion.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al insertar usuario.", e);
+        }
     }
 
+    public boolean baja(Usuario usuario) {
+        if (usuario == null) {
+            return false;
+        }
+
+        String sql = "DELETE FROM usuario WHERE dni = ?";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, usuario.getDni());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al borrar usuario.", e);
+        }
+    }
 
     public Usuario buscar(Usuario usuario) {
-        if (usuario == null)
+        if (usuario == null) {
             return null;
+        }
 
-        for (Usuario u : usuarios) {
-            if (u.equals(usuario)) {
-                return new Usuario(u);
+        String sql = """
+                SELECT u.dni, u.nombre, u.email,
+                       d.via, d.numero, d.cp, d.localidad
+                FROM usuario u
+                JOIN direccion d ON u.dni = d.dni
+                WHERE u.dni = ?
+                """;
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, usuario.getDni());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return crearUsuario(rs);
+                }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar usuario.", e);
         }
 
         return null;
     }
 
     public List<Usuario> todos() {
+        List<Usuario> usuarios = new ArrayList<>();
 
+        String sql = """
+                SELECT u.dni, u.nombre, u.email,
+                       d.via, d.numero, d.cp, d.localidad
+                FROM usuario u
+                JOIN direccion d ON u.dni = d.dni
+                ORDER BY u.nombre
+                """;
 
-        List<Usuario> copia = new ArrayList<>();
+        try (PreparedStatement ps = conexion.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
-        for (Usuario u : usuarios) {
-            copia.add(new Usuario(u));
+            while (rs.next()) {
+                usuarios.add(crearUsuario(rs));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al mostrar usuarios.", e);
         }
-        Collections.sort(copia);
+        return usuarios;
+    }
 
-        return copia;
+    private Usuario crearUsuario(ResultSet rs) throws SQLException {
+        Usuario usuario = new Usuario(
+                rs.getString("dni"),
+                rs.getString("nombre")
+        );
+
+        usuario.setEmail(rs.getString("email"));
+
+        Direccion direccion = new Direccion(
+                rs.getString("via"),
+                rs.getString("numero"),
+                rs.getString("cp"),
+                rs.getString("localidad")
+        );
+
+        usuario.setDireccion(direccion);
+        return usuario;
     }
 }

@@ -39,9 +39,23 @@ public class Libro implements Comparable<Libro>{
         setTitulo(libro.getTitulo());
         setAnio(libro.getAnio());
         setCategoria(libro.getCategoria());
+        this.autores = new Autor[MAX_AUTORES];
+        this.numAutores = 0;
         for (Autor a : libro.getAutores()) {
+            if (a != null) {
             addAutor(new Autor(a));
         }
+        }
+    }
+
+    //Constructor de búsqueda por ISBN
+    public Libro(String isbn) {
+        setIsbn(isbn);
+        this.titulo = "Temporal";
+        this.anio = 1;
+        this.categoria = Categoria.OTROS;
+        this.autores = new Autor[MAX_AUTORES];
+        this.numAutores = 0;
     }
 
     // Getters y Setters

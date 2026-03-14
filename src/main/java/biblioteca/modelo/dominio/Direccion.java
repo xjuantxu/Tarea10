@@ -12,15 +12,13 @@ public class Direccion {
     // Atributos
     private String via;
     private String numero;
-    private String piso;
     private String cp;
     private String localidad;
 
     //Constructor
-    public Direccion(String via, String numero, String piso, String cp, String localidad) {
+    public Direccion(String via, String numero, String cp, String localidad) {
         setVia(via);
         setNumero(numero);
-        setPiso(piso);
         setCp(cp);
         setLocalidad(localidad);
     }
@@ -29,7 +27,6 @@ public class Direccion {
     public Direccion(Direccion otro) {
         setVia(otro.getVia());
         setNumero(otro.getNumero());
-        setPiso(otro.getPiso());
         setCp(otro.getCp());
         setLocalidad(otro.getLocalidad());
     }
@@ -40,9 +37,6 @@ public class Direccion {
     }
     public String getNumero() {
         return numero;
-    }
-    public String getPiso() {
-        return piso;
     }
     public String getCp() {
         return cp;
@@ -61,9 +55,6 @@ public class Direccion {
         if (numero.trim().isEmpty()) throw new IllegalArgumentException("Número no puede estar vacío");
         this.numero = numero;
     }
-    public void setPiso(String piso)  {
-        this.numero = numero;
-    } //Piso puede quedar vacío, ya que puede tratarse de un adosado.
     public void setCp(String cp) throws IllegalArgumentException {
         //Junto con que no sea nulo, comprueba que el código postal sigue el patrón especificado.
         if (cp == null) throw new IllegalArgumentException("Código postal no puede ser nulo");
@@ -80,6 +71,6 @@ public class Direccion {
     //ToString
     @Override
     public String toString() {
-        return via + " " + numero + ", " + piso + " - " + cp + " " + localidad;
+        return via + " " + numero +", " + cp + " (" + localidad+ ")";
     }
 }

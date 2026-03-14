@@ -24,10 +24,10 @@ public class Consola {
         System.out.println("4 - Insertar libro");
         System.out.println("5 - Borrar libro");
         System.out.println("6 - Mostrar libros");
-        System.out.println("7 - Nuevo préstamo");
-        System.out.println("8 - Devolver préstamo");
-        System.out.println("9 - Mostrar todos los préstamos");
-        System.out.println("10 - Mostrar préstamos de un usuario");
+        System.out.println("7 - Nuevo prestamo");
+        System.out.println("8 - Devolver prestamo");
+        System.out.println("9 - Mostrar todos los prestamos");
+        System.out.println("10 - Mostrar prestamos de un usuario");
         System.out.print("Seleccione opción: ");
     }
 
@@ -38,11 +38,9 @@ public class Consola {
         String email;
         String via;
         String numero;
-        String piso;
         String cp;
         String localidad;
 
-        Direccion prueba = new Direccion("Calle Falsa", "123", "2º A", "12345", "Springfield");
         while (true) {
             System.out.print("ID: ");
             dni = Entrada.cadena();
@@ -83,7 +81,7 @@ public class Consola {
             System.out.print("Vía: ");
             via = Entrada.cadena();
             try {
-                Direccion prueba2 = new Direccion(via, "1", "2ºA", "00000", "tmp");
+                Direccion prueba2 = new Direccion(via, "1", "00000", "tmp");
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
@@ -93,27 +91,17 @@ public class Consola {
             System.out.print("Número: ");
             numero = Entrada.cadena();
             try {
-                Direccion prueba2 = new Direccion(via, numero, "2ºA", "00000", "tmp");
+                Direccion prueba2 = new Direccion(via, numero, "00000", "tmp");
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
         } //Bucle que comprueba que el número es correcto y lanza una excepción en caso contrario
         while (true) {
-            System.out.print("Piso: ");
-            piso = Entrada.cadena();
-            try {
-                Direccion prueba2 = new Direccion(via, numero, piso, "00000", "tmp");
-                break;
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            }
-        } //Bucle que comprueba que el piso es correcto y lanza una excepción en caso contrario
-        while (true) {
             System.out.print("Código Postal: ");
             cp = Entrada.cadena();
             try {
-                Direccion prueba2 = new Direccion(via, numero, piso, cp, "tmp");
+                Direccion prueba2 = new Direccion(via, numero, cp, "tmp");
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
@@ -123,13 +111,13 @@ public class Consola {
             System.out.print("Localidad: ");
             localidad = Entrada.cadena();
             try {
-                Direccion prueba2 = new Direccion(via, numero, piso, cp, localidad);
+                Direccion prueba2 = new Direccion(via, numero, cp, localidad);
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
         } //Bucle que comprueba que la localidad es correcta y lanza una excepción en caso contrario
-        usuario.setDireccion(new Direccion(via, numero, piso, cp, localidad));
+        usuario.setDireccion(new Direccion(via, numero, cp, localidad));
 
         return usuario;
     }
@@ -156,7 +144,7 @@ public class Consola {
         }
 
         if (buscar) {
-            return new Libro(isbn, "", 0, Categoria.OTROS);
+            return new Libro(isbn);
         }
 
         while (true) {

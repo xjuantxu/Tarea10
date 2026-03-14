@@ -13,6 +13,10 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    implementation("mysql:mysql-connector-java:8.0.33")
+    implementation(files("lib/entrada-1.0.3.jar"))
+// Use the latest stable version
 }
 
 tasks.test {

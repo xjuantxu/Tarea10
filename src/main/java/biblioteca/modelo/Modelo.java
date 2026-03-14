@@ -1,8 +1,10 @@
 package biblioteca.modelo;
 
 import biblioteca.modelo.negocio.Libros;
+import biblioteca.modelo.negocio.MySQL;
 import biblioteca.modelo.negocio.Usuarios;
 import biblioteca.modelo.negocio.Prestamos;
+
 
 import biblioteca.modelo.dominio.Libro;
 import biblioteca.modelo.dominio.Usuario;
@@ -28,13 +30,23 @@ public class Modelo {
 
     // Inicializa las colecciones
     public void comenzar() {
-        libros = new Libros();
-        usuarios = new Usuarios();
-        prestamos = new Prestamos();
+        MySQL.getInstancia();
+        libros = libros.getInstancia();
+        usuarios = usuarios.getInstancia();
+        prestamos = prestamos.getInstancia();
+
+        libros.comenzar();
+        usuarios.comenzar();
+        prestamos.comenzar();
     }
 
     // Termina el modelo
     public void terminar() {
+        prestamos.terminar();
+        libros.terminar();
+        usuarios.terminar();
+        MySQL.getInstancia().cerrarConexion();
+        System.out.println("Conexión cerrada.");
         System.out.println("Termina Modelo");
     }
 
