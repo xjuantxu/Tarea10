@@ -27,15 +27,12 @@ public class MySQL {
 
     private void establecerConexion() {
         try {
-            String url = "jdbc:mysql://" + host + "/" + esquema
-                    + "?useSSL=false&serverTimezone=UTC";
+            String url = "jdbc:mysql://" + host + "/" + esquema + "?useSSL=false&serverTimezone=UTC";
 
             conexion = DriverManager.getConnection(url, usuario, pass);
 
         } catch (SQLException e) {
-            throw new RuntimeException(
-                    "Error al conectar con la base de datos: " + e.getMessage(), e
-            );
+            throw new RuntimeException("Error al conectar con la base de datos: " + e.getMessage(), e);
         }
     }
 
@@ -49,7 +46,7 @@ public class MySQL {
                 conexion.close();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error al cerrar la conexion.", e);
+            throw new RuntimeException("Error al cerrar la conexion: " + e.getMessage());
         }
     }
 }
