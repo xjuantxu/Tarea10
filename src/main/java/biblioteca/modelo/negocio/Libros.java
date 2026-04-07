@@ -120,7 +120,7 @@ public class Libros {
                 int anio = rsLibro.getInt("anio");
                 Categoria categoria = Categoria.valueOf(rsLibro.getString("categoria"));
 
-                Libro resultado = crearLibroOAudio(isbn, titulo, anio, categoria);
+                Libro resultado = crearLibro(isbn, titulo, anio, categoria);
                 cargarAutores(resultado);
 
                 if (resultado instanceof Audiolibro) {
@@ -160,7 +160,7 @@ public class Libros {
         return libros;
     }
 
-    private Libro crearLibroOAudio(String isbn, String titulo, int anio, Categoria categoria) throws SQLException {
+    private Libro crearLibro(String isbn, String titulo, int anio, Categoria categoria) throws SQLException {
         String sqlAudio = """
                 SELECT duracion_segundos, formato
                 FROM audiolibro
