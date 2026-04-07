@@ -99,8 +99,7 @@ public class Prestamos {
                 ORDER BY fInicio DESC
                 """;
 
-        try (PreparedStatement ps = conexion.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = conexion.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 prestamos.add(crearPrestamo(rs));
@@ -149,11 +148,7 @@ public class Prestamos {
         Usuario usuario = Usuarios.getInstancia().buscar(new Usuario(rs.getString("dni")));
         Libro libro = Libros.getInstancia().buscar(new Libro(rs.getString("isbn")));
 
-        Prestamo prestamo = new Prestamo(
-                libro,
-                usuario,
-                rs.getDate("fInicio").toLocalDate()
-        );
+        Prestamo prestamo = new Prestamo(libro, usuario, rs.getDate("fInicio").toLocalDate());
 
         if (rs.getBoolean("devuelto") && rs.getDate("fDevolucion") != null) {
             prestamo.devolver(rs.getDate("fDevolucion").toLocalDate());

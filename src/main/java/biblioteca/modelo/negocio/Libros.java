@@ -21,18 +21,15 @@ public class Libros {
 
     private Libros() {
     }
-
     public static Libros getInstancia() {
         if (instancia == null) {
             instancia = new Libros();
         }
         return instancia;
     }
-
     public void comenzar() {
         conexion = MySQL.getInstancia().getConexion();
     }
-
     public void terminar() {
         conexion = null;
     }
@@ -99,7 +96,6 @@ public class Libros {
             throw new RuntimeException("Error al borrar libro.", e);
         }
     }
-
     public Libro buscar(Libro libro) {
         if (libro == null) {
             return null;
@@ -137,7 +133,6 @@ public class Libros {
             throw new RuntimeException("Error al buscar libro.", e);
         }
     }
-
     public List<Libro> todos() {
         List<Libro> libros = new ArrayList<>();
 
@@ -186,7 +181,6 @@ public class Libros {
 
         return new Libro(isbn, titulo, anio, categoria);
     }
-
     private void cargarAutores(Libro libro) throws SQLException {
         String sql = """
                 SELECT a.nombre, a.apellidos, a.nacionalidad
@@ -211,7 +205,6 @@ public class Libros {
             }
         }
     }
-
     private int obtenerOCrearIdAutor(Autor autor) {
         Integer idAutor = buscarIdAutor(autor);
 
@@ -242,7 +235,6 @@ public class Libros {
             throw new RuntimeException("Error al insertar autor.", e);
         }
     }
-
     private Integer buscarIdAutor(Autor autor) {
         String sql = """
                 SELECT idAutor
@@ -267,7 +259,6 @@ public class Libros {
             throw new RuntimeException("Error al buscar autor.", e);
         }
     }
-
     private void insertarLibroAutor(String isbn, int idAutor) {
         String sql = """
                 INSERT INTO libro_autor (isbn, idAutor)

@@ -120,7 +120,6 @@ public class Vista {
         else
             System.out.println("El usuario ya existe");
     }
-
     private void borrarUsuario() {
         Usuario usuario = Consola.nuevoUsuario(true);
 
@@ -129,7 +128,6 @@ public class Vista {
         else
             System.out.println("Usuario no encontrado");
     }
-
     private void listarUsuarios() {
         List<Usuario> usuarios = controlador.listadoUsuarios();
 
@@ -152,7 +150,6 @@ public class Vista {
         else
             System.out.println("El libro ya existe");
     }
-
     private void borrarLibro() {
         Libro libro = Consola.nuevoLibro(true);
 
@@ -161,7 +158,6 @@ public class Vista {
         else
             System.out.println("Libro no encontrado");
     }
-
     private void listarLibros() {
         List<Libro> libros = controlador.listadoLibros();
 
@@ -203,7 +199,6 @@ public class Vista {
         else
             System.out.println("No se pudo realizar el préstamo");
     }
-
     private void devolverPrestamo() {
 
         System.out.println("--- DEVOLUCIÓN ---");
@@ -231,7 +226,6 @@ public class Vista {
         else
             System.out.println("No se encontró préstamo activo");
     }
-
     private void mostrarPrestamos() {
 
         List<Prestamo> prestamos = controlador.listadoPrestamos();
@@ -242,7 +236,6 @@ public class Vista {
             System.out.println(p);
         }
     }
-
     private void mostrarPrestamosUsuario() {
 
         System.out.print("DNI del usuario: ");

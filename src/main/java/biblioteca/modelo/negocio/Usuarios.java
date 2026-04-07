@@ -52,8 +52,7 @@ public class Usuarios {
                 VALUES (?, ?, ?, ?, ?)
                 """;
 
-        try (PreparedStatement psUsuario = conexion.prepareStatement(sqlUsuario);
-             PreparedStatement psDireccion = conexion.prepareStatement(sqlDireccion)) {
+        try (PreparedStatement psUsuario = conexion.prepareStatement(sqlUsuario); PreparedStatement psDireccion = conexion.prepareStatement(sqlDireccion)) {
 
             psUsuario.setString(1, usuario.getDni());
             psUsuario.setString(2, usuario.getNombre());
@@ -127,8 +126,7 @@ public class Usuarios {
                 ORDER BY u.nombre
                 """;
 
-        try (PreparedStatement ps = conexion.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = conexion.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 usuarios.add(crearUsuario(rs));
@@ -141,19 +139,11 @@ public class Usuarios {
     }
 
     private Usuario crearUsuario(ResultSet rs) throws SQLException {
-        Usuario usuario = new Usuario(
-                rs.getString("dni"),
-                rs.getString("nombre")
-        );
+        Usuario usuario = new Usuario(rs.getString("dni"), rs.getString("nombre"));
 
         usuario.setEmail(rs.getString("email"));
 
-        Direccion direccion = new Direccion(
-                rs.getString("via"),
-                rs.getString("numero"),
-                rs.getString("cp"),
-                rs.getString("localidad")
-        );
+        Direccion direccion = new Direccion(rs.getString("via"), rs.getString("numero"), rs.getString("cp"), rs.getString("localidad"));
 
         usuario.setDireccion(direccion);
         return usuario;

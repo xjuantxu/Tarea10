@@ -6,10 +6,10 @@ import java.sql.SQLException;
 
 public class MySQL {
 
-    public static final String host = "localhost";
-    public static final String esquema = "biblioteca";
-    public static final String usuario = "admin";
-    public static final String pass = "biblioteca-2026";
+    public static final String Host = "localhost";
+    public static final String Esquema = "biblioteca";
+    public static final String Usuario = "admin";
+    public static final String Pass = "biblioteca-2026";
 
     private static MySQL instancia;
     private Connection conexion;
@@ -27,9 +27,9 @@ public class MySQL {
 
     private void establecerConexion() {
         try {
-            String url = "jdbc:mysql://" + host + "/" + esquema + "?useSSL=false&serverTimezone=UTC";
+            String url = "jdbc:mysql://" + Host + "/" + Esquema+"?useSSL=false"+"&allowPublicKeyRetrieval=false";
 
-            conexion = DriverManager.getConnection(url, usuario, pass);
+            conexion = DriverManager.getConnection(url, Usuario, Pass);
 
         } catch (SQLException e) {
             throw new RuntimeException("Error al conectar con la base de datos: " + e.getMessage(), e);
