@@ -68,6 +68,11 @@ public class Usuarios {
             psDireccion.executeUpdate();
 
         } catch (SQLException e) {
+
+            if (e.getErrorCode() == 1062) {
+                System.out.println("Error. El usuario ya existe");
+            }
+
             throw new RuntimeException("Error al insertar usuario.", e);
         }
     }

@@ -60,6 +60,9 @@ public class Libros {
             psLibro.setString(4, libro.getCategoria().name());
             psLibro.executeUpdate();
         } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) {
+                throw new IllegalArgumentException("El libro ya existe");
+            }
             throw new RuntimeException("Error al insertar libro.", e);
         }
 
@@ -70,6 +73,10 @@ public class Libros {
                 psAudio.setString(3, audiolibro.getFormato());
                 psAudio.executeUpdate();
             } catch (SQLException e) {
+
+                if (e.getErrorCode() == 1062) {
+                    throw new IllegalArgumentException("El audiolibro ya existe");
+                }
                 throw new RuntimeException("Error al insertar audiolibro.", e);
             }
         }
@@ -130,6 +137,8 @@ public class Libros {
                 return new Libro(resultado);
             }
         } catch (SQLException e) {
+
+
             throw new RuntimeException("Error al buscar libro.", e);
         }
     }
@@ -161,20 +170,37 @@ public class Libros {
     }
 
     private Libro crearLibro(String isbn, String titulo, int anio, Categoria categoria) throws SQLException {
-        String sqlAudio = """
-                SELECT duracion_segundos, formato
-                FROM audiolibro
-                WHERE isbn = ?
-                """;
 
-        try (PreparedStatement psAudio = conexion.prepareStatement(sqlAudio)) {
-            psAudio.setString(1, isbn);
+        // Validación de ISBN
+        if (isbn == null || isbn.trim().isEmpty()) {
+            throw new IllegalArgumentException("ISBN no puede ser nulo o vacío");
+        }
 
-            try (ResultSet rsAudio = psAudio.executeQuery()) {
-                if (rsAudio.next()) {
-                    Duration duracion = Duration.ofSeconds(rsAudio.getLong("duracion_segundos"));
-                    String formato = rsAudio.getString("formato");
-                    return new Audiolibro(isbn, titulo, anio, categoria, duracion, formato);
+        String sql = """
+            SELECT duracion_segundos, formato
+            FROM audiolibro
+            WHERE isbn = ?
+            """;
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, isbn);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                if (rs.next()) {
+
+                    long segundos = rs.getLong("duracion_segundos");
+                    String formato = rs.getString("formato");
+
+                    // ✔ La validación se delega al setter
+                    return new Audiolibro(
+                            isbn,
+                            titulo,
+                            anio,
+                            categoria,
+                            Duration.ofSeconds(segundos),
+                            formato
+                    );
                 }
             }
         }
