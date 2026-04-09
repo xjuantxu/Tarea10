@@ -27,7 +27,7 @@ public class MySQL {
 
     private void establecerConexion() {
         try {
-            String url = "jdbc:mysql://" + Host + "/" + Esquema+"?useSSL=false"+"&allowPublicKeyRetrieval=false";
+            String url = "jdbc:mysql://" + Host + "/" + Esquema +"?useSSL=false"+"&allowPublicKeyRetrieval=false";
 
             conexion = DriverManager.getConnection(url, Usuario, Pass);
 
