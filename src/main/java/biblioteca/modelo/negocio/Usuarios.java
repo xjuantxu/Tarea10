@@ -78,6 +78,7 @@ public class Usuarios {
     }
 
     public boolean baja(Usuario usuario) {
+
         if (usuario == null) {
             return false;
         }
@@ -85,13 +86,23 @@ public class Usuarios {
         String sql = "DELETE FROM usuario WHERE dni = ?";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+
             ps.setString(1, usuario.getDni());
+
             return ps.executeUpdate() > 0;
+
         } catch (SQLException e) {
+
+            // Tiene préstamos asociados (FK RESTRICT)
+            if (e.getErrorCode() == 1451) {
+                throw new IllegalArgumentException(
+                        "No se puede eliminar el usuario: tiene préstamos asociados"
+                );
+            }
+
             throw new RuntimeException("Error al borrar usuario.", e);
         }
     }
-
     public Usuario buscar(Usuario usuario) {
         if (usuario == null) {
             return null;

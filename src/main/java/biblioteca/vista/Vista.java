@@ -141,10 +141,16 @@ public class Vista {
             return;
         }
 
-        if (controlador.baja(usuario))
-            System.out.println("Usuario eliminado.");
-        else
-            System.out.println("No se pudo eliminar el usuario.");
+        try {
+
+            if (controlador.baja(usuario))
+                System.out.println("Usuario eliminado");
+            else
+                System.out.println("Usuario no encontrado");
+
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
     }
     private void listarUsuarios() {
         List<Usuario> usuarios = controlador.listadoUsuarios();
@@ -190,10 +196,16 @@ public class Vista {
             return;
         }
 
-        if (controlador.baja(libro))
-            System.out.println("Libro eliminado.");
-        else
-            System.out.println("No se pudo eliminar el libro.");
+        try {
+
+            if (controlador.baja(libro))
+                System.out.println("Libro eliminado");
+            else
+                System.out.println("Libro no encontrado");
+
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
     }
     private void listarLibros() {
         List<Libro> libros = controlador.listadoLibros();

@@ -21,15 +21,18 @@ public class Libros {
 
     private Libros() {
     }
+
     public static Libros getInstancia() {
         if (instancia == null) {
             instancia = new Libros();
         }
         return instancia;
     }
+
     public void comenzar() {
         conexion = MySQL.getInstancia().getConexion();
     }
+
     public void terminar() {
         conexion = null;
     }
@@ -90,6 +93,7 @@ public class Libros {
     }
 
     public boolean baja(Libro libro) {
+
         if (libro == null) {
             return false;
         }
@@ -97,12 +101,24 @@ public class Libros {
         String sql = "DELETE FROM libro WHERE isbn = ?";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+
             ps.setString(1, libro.getISBN());
+
             return ps.executeUpdate() > 0;
+
         } catch (SQLException e) {
+
+            // Tiene préstamos asociados (FK RESTRICT en prestamo)
+            if (e.getErrorCode() == 1451) {
+                throw new IllegalArgumentException(
+                        "No se puede eliminar el libro: tiene préstamos asociados"
+                );
+            }
+
             throw new RuntimeException("Error al borrar libro.", e);
         }
     }
+
     public Libro buscar(Libro libro) {
         if (libro == null) {
             return null;
@@ -142,6 +158,7 @@ public class Libros {
             throw new RuntimeException("Error al buscar libro.", e);
         }
     }
+
     public List<Libro> todos() {
         List<Libro> libros = new ArrayList<>();
 
@@ -177,10 +194,10 @@ public class Libros {
         }
 
         String sql = """
-            SELECT duracion_segundos, formato
-            FROM audiolibro
-            WHERE isbn = ?
-            """;
+                SELECT duracion_segundos, formato
+                FROM audiolibro
+                WHERE isbn = ?
+                """;
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setString(1, isbn);
@@ -207,6 +224,7 @@ public class Libros {
 
         return new Libro(isbn, titulo, anio, categoria);
     }
+
     private void cargarAutores(Libro libro) throws SQLException {
         String sql = """
                 SELECT a.nombre, a.apellidos, a.nacionalidad
@@ -231,6 +249,7 @@ public class Libros {
             }
         }
     }
+
     private int obtenerOCrearIdAutor(Autor autor) {
         Integer idAutor = buscarIdAutor(autor);
 
@@ -261,6 +280,7 @@ public class Libros {
             throw new RuntimeException("Error al insertar autor.", e);
         }
     }
+
     private Integer buscarIdAutor(Autor autor) {
         String sql = """
                 SELECT idAutor
@@ -285,6 +305,7 @@ public class Libros {
             throw new RuntimeException("Error al buscar autor.", e);
         }
     }
+
     private void insertarLibroAutor(String isbn, int idAutor) {
         String sql = """
                 INSERT INTO libro_autor (isbn, idAutor)
