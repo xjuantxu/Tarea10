@@ -94,7 +94,17 @@ public class Libro implements Comparable<Libro>{
         this.titulo = titulo;
     }
     public void setAnio(int anio) throws IllegalArgumentException {
-        if (anio <= 0) throw new IllegalArgumentException("Año inválido");
+
+        int anioActual = java.time.LocalDate.now().getYear();
+
+        if (anio <= 0) {
+            throw new IllegalArgumentException("Año inválido");
+        }
+
+        if (anio > anioActual) {
+            throw new IllegalArgumentException("El año no puede ser futuro");
+        }
+
         this.anio = anio;
     }
     public void setCategoria(Categoria categoria) throws IllegalArgumentException {
