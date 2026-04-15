@@ -197,9 +197,9 @@ public class Vista {
         LocalDate fecha = Consola.leerFecha();
 
         if (controlador.prestar(libro, usuario, fecha))
-            System.out.println("Préstamo realizado correctamente");
+            System.out.println("Préstamo realizado correctamente.");
         else
-            System.out.println("No se pudo realizar el préstamo");
+            System.out.println("No se pudo realizar el préstamo.");
     }
     private void devolverPrestamo() {
 

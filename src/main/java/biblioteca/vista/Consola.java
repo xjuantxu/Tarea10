@@ -42,7 +42,7 @@ public class Consola {
         String localidad;
 
         while (true) {
-            System.out.print("ID: ");
+            System.out.print("Introduce el DNI del usuario: ");
             dni = Entrada.cadena();
             try {
                 Usuario test = new Usuario(dni, "tmp");
@@ -55,7 +55,7 @@ public class Consola {
             return new Usuario(dni);
         }
         while (true) {
-            System.out.print("Nombre: ");
+            System.out.print("Introduce el nombre del usuario: ");
             nombre = Entrada.cadena();
             try {
                 Usuario test = new Usuario(dni, nombre);
@@ -66,7 +66,7 @@ public class Consola {
         } //Bucle que comprueba que el nombre es correcto y lanza una excepción en caso contrario
         Usuario usuario = new Usuario(dni, nombre);
         while (true) {
-            System.out.print("Email: ");
+            System.out.print("Introduce el correo electrónico del usuario: ");
             email = Entrada.cadena();
             try {
                 Usuario test = new Usuario(dni, nombre);
@@ -78,7 +78,7 @@ public class Consola {
         usuario.setEmail(email);
 
         while (true) {
-            System.out.print("Vía: ");
+            System.out.print("Introduce la vía del usuario: ");
             via = Entrada.cadena();
             try {
                 Direccion prueba2 = new Direccion(via, "1", "00000", "tmp");
@@ -88,7 +88,7 @@ public class Consola {
             }
         } //Bucle que comprueba que la vía es correcta y lanza una excepción en caso contrario
         while (true) {
-            System.out.print("Número: ");
+            System.out.print("Introduce el número de la vía del usuario: ");
             numero = Entrada.cadena();
             try {
                 Direccion prueba2 = new Direccion(via, numero, "00000", "tmp");
@@ -98,7 +98,7 @@ public class Consola {
             }
         } //Bucle que comprueba que el número es correcto y lanza una excepción en caso contrario
         while (true) {
-            System.out.print("Código Postal: ");
+            System.out.print("Introduce el código postal del usuario: ");
             cp = Entrada.cadena();
             try {
                 Direccion prueba2 = new Direccion(via, numero, cp, "tmp");
@@ -108,7 +108,7 @@ public class Consola {
             }
         } //Bucle que comprueba que el código postal es correcto y lanza una excepción en caso contrario
         while (true) {
-            System.out.print("Localidad: ");
+            System.out.print("Introduce la localidad del usuario: ");
             localidad = Entrada.cadena();
             try {
                 Direccion prueba2 = new Direccion(via, numero, cp, localidad);
@@ -133,7 +133,7 @@ public class Consola {
         int nAutores = 0;
 
         while (true) {
-            System.out.print("ISBN: ");
+            System.out.print("Introduce el ISBN del libro: ");
             isbn = Entrada.cadena();
             try {
                 new Libro(isbn, "tmp", 1, Categoria.OTROS);
@@ -148,7 +148,7 @@ public class Consola {
         }
 
         while (true) {
-            System.out.print("Título: ");
+            System.out.print("Introduce el título del libro: ");
             titulo = Entrada.cadena();
             try {
                 new Libro(isbn, titulo, 2025, Categoria.TECNICO);
@@ -160,7 +160,7 @@ public class Consola {
 
         while (true) {
             try {
-                System.out.print("Año: ");
+                System.out.print("Introduce el año del libro: ");
                 anio = Entrada.entero();
                 new Libro(isbn, titulo, anio, Categoria.OTROS);
                 break;
@@ -196,7 +196,7 @@ public class Consola {
 
         while (true) {
             try {
-                System.out.print("Seleccione tipo: ");
+                System.out.print("Selecciona tipo: ");
                 tipo = Entrada.entero();
                 if (tipo == 1 || tipo == 2)
                     break;
@@ -215,7 +215,7 @@ public class Consola {
 
             while (true) {
                 try {
-                    System.out.print("Duración (HH:mm:ss): ");
+                    System.out.print("Introduce la duración del audiolibro (HH:mm:ss): ");
                     String tiempo = Entrada.cadena().trim();
 
                     // Validar formato básico con regex
@@ -244,7 +244,7 @@ public class Consola {
             }
 
             while (true) {
-                System.out.print("Formato (mp3, wav...): ");
+                System.out.print("Introduce el formato del libro (mp3, wav...): ");
                 formato = Entrada.cadena();
                 try {
                     new Audiolibro(isbn, titulo, anio, categoria, duracion, formato);
@@ -285,7 +285,7 @@ public class Consola {
         String nac;
 
         while (true) {
-            System.out.print("Nombre autor: ");
+            System.out.print("Nombre del autor: ");
             nombre = Entrada.cadena();
             try {
                 Autor autor = new Autor(nombre, "tmp", "tmp");
@@ -295,7 +295,7 @@ public class Consola {
             }
         } //Bucle que comprueba la validez del nombre y lanza excepción si no es válido.
         while (true) {
-            System.out.print("Apellidos: ");
+            System.out.print("Apellidos del autor: ");
             apellidos = Entrada.cadena();
             try {
                 Autor autor = new Autor("tmp", apellidos, "tmp");
