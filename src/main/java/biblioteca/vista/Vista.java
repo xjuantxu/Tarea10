@@ -121,12 +121,30 @@ public class Vista {
             System.out.println("El usuario ya existe");
     }
     private void borrarUsuario() {
+
         Usuario usuario = Consola.nuevoUsuario(true);
+        usuario = controlador.buscar(usuario);
+
+        if (usuario == null) {
+            System.out.println("Usuario no encontrado.");
+            return;
+        }
+
+        // 🔎 Mostrar resumen
+        System.out.println("\n--- USUARIO ENCONTRADO ---");
+        System.out.println(usuario);
+        System.out.println();
+
+        // Confirmamos eliminación
+        if (!Consola.confirmar("¿Seguro que quieres eliminar este usuario?")) {
+            System.out.println("Operación cancelada.");
+            return;
+        }
 
         if (controlador.baja(usuario))
-            System.out.println("Usuario eliminado");
+            System.out.println("Usuario eliminado.");
         else
-            System.out.println("Usuario no encontrado");
+            System.out.println("No se pudo eliminar el usuario.");
     }
     private void listarUsuarios() {
         List<Usuario> usuarios = controlador.listadoUsuarios();
@@ -152,12 +170,30 @@ public class Vista {
             System.out.println("El libro ya existe");
     }
     private void borrarLibro() {
+
         Libro libro = Consola.nuevoLibro(true);
+        libro = controlador.buscar(libro);
+
+        if (libro == null) {
+            System.out.println("Libro no encontrado.");
+            return;
+        }
+
+        // 🔎 Mostrar resumen
+        System.out.println("\n--- LIBRO ENCONTRADO ---");
+        System.out.println(libro);
+        System.out.println();
+
+        // Confirmamos
+        if (!Consola.confirmar("¿Seguro que quieres eliminar este libro?")) {
+            System.out.println("Operación cancelada.");
+            return;
+        }
 
         if (controlador.baja(libro))
-            System.out.println("Libro eliminado");
+            System.out.println("Libro eliminado.");
         else
-            System.out.println("Libro no encontrado");
+            System.out.println("No se pudo eliminar el libro.");
     }
     private void listarLibros() {
         List<Libro> libros = controlador.listadoLibros();
@@ -222,6 +258,18 @@ public class Vista {
         }
 
         LocalDate fecha = Consola.leerFecha();
+
+        // Mostrar resumen
+        System.out.println("\n--- PRÉSTAMO ENCONTRADO ---");
+        System.out.printf("%s → %s\n", usuario.getNombre(), libro.getTitulo());
+        System.out.println("Fecha devolución: " + fecha);
+        System.out.println();
+
+        // Confirmamos
+        if (!Consola.confirmar("¿Confirmar devolución?")) {
+            System.out.println("Operación cancelada");
+            return;
+        }
 
         if (controlador.devolver(libro, usuario, fecha))
             System.out.println("Préstamo devuelto correctamente");

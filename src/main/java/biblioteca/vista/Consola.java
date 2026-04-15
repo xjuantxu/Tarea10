@@ -318,6 +318,25 @@ public class Consola {
         return new Autor(nombre, apellidos, nac);
     }
 
+    // Metodo para confirmar operaciones en consola
+    public static boolean confirmar(String mensaje) {
+
+        while (true) {
+            System.out.print(mensaje + " (S/N): ");
+            String respuesta = Entrada.cadena().trim();
+
+            if (respuesta.equalsIgnoreCase("S") || respuesta.equalsIgnoreCase("SI")) {
+                return true;
+            }
+
+            if (respuesta.equalsIgnoreCase("N") || respuesta.equalsIgnoreCase("NO")) {
+                return false;
+            }
+
+            System.out.println("Respuesta no válida. Introduce S o N.");
+        }
+    }
+
     // Devuelve la fecha actual
     public static LocalDate leerFecha() {
         return LocalDate.now();
