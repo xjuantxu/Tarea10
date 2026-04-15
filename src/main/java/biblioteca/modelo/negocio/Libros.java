@@ -232,25 +232,42 @@ public class Libros {
     }
 
     private void cargarAutores(Libro libro) throws SQLException {
+
         String sql = """
-                SELECT a.nombre, a.apellidos, a.nacionalidad
-                FROM autor a
-                JOIN libro_autor la ON a.idAutor = la.idAutor
-                WHERE la.isbn = ?
-                ORDER BY a.apellidos, a.nombre
-                """;
+            SELECT a.nombre, a.apellidos, a.nacionalidad
+            FROM autor a
+            JOIN libro_autor la ON a.idAutor = la.idAutor
+            WHERE la.isbn = ?
+            ORDER BY a.apellidos, a.nombre
+            """;
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+
             ps.setString(1, libro.getISBN());
 
             try (ResultSet rs = ps.executeQuery()) {
+
                 while (rs.next()) {
+
                     Autor autor = new Autor(
                             rs.getString("nombre"),
                             rs.getString("apellidos"),
                             rs.getString("nacionalidad")
                     );
-                    libro.addAutor(autor);
+
+                    // Evitar duplicados
+                    boolean existe = false;
+
+                    for (Autor a : libro.getAutores()) {
+                        if (a != null && a.equals(autor)) {
+                            existe = true;
+                            break;
+                        }
+                    }
+
+                    if (!existe) {
+                        libro.addAutor(autor);
+                    }
                 }
             }
         }

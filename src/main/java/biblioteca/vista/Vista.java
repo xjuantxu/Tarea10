@@ -156,10 +156,12 @@ public class Vista {
         List<Usuario> usuarios = controlador.listadoUsuarios();
 
         System.out.println("\n--- LISTADO DE USUARIOS ---");
+        System.out.println();
 
         for (Usuario u : usuarios) {
             System.out.println(u);
             System.out.println("--------------------------------------------------");
+            System.out.println();
         }
     }
 
@@ -211,10 +213,11 @@ public class Vista {
         List<Libro> libros = controlador.listadoLibros();
 
         System.out.println("\n--- LISTADO DE LIBROS ---");
-
+        System.out.println();
         for (Libro l : libros) {
             System.out.println(l);
             System.out.println("--------------------------------------------------");
+            System.out.println();
         }
     }
 
@@ -244,10 +247,28 @@ public class Vista {
 
         LocalDate fecha = Consola.leerFecha();
 
-        if (controlador.prestar(libro, usuario, fecha))
-            System.out.println("Préstamo realizado correctamente.");
-        else
-            System.out.println("No se pudo realizar el préstamo.");
+        // Mostrar resumen
+        System.out.println("\n--- RESUMEN DEL PRÉSTAMO ---");
+        System.out.printf("Usuario: %s\n", usuario.getNombre());
+        System.out.printf("Libro: %s\n", libro.getTitulo());
+        System.out.printf("Fecha inicio: %s\n", fecha);
+        System.out.println();
+
+        // Confirmamos
+        if (!Consola.confirmar("¿Confirmar préstamo?")) {
+            System.out.println("Operación cancelada");
+            return;
+        }
+        try {
+
+            if (controlador.prestar(libro, usuario, fecha))
+                System.out.println("Préstamo realizado correctamente");
+            else
+                System.out.println("No se pudo realizar el préstamo");
+
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
     }
     private void devolverPrestamo() {
 
@@ -314,10 +335,12 @@ public class Vista {
         List<Prestamo> prestamos = controlador.listadoPrestamos(usuario);
 
         System.out.println("\n--- PRÉSTAMOS DEL USUARIO ---");
+        System.out.println();
 
         for (Prestamo p : prestamos) {
             System.out.println(p);
             System.out.println("--------------------------------------------------");
+            System.out.println();
         }
     }
 }

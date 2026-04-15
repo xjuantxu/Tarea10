@@ -95,8 +95,8 @@ public class Prestamo implements Comparable<Prestamo> {
 
         return String.format(
                 "=== PRÉSTAMO ===\n" +
-                        "Usuario:\n%s\n\n" +
-                        "Libro:\n%s\n\n" +
+                        "-Usuario-\n%s\n\n" +
+                        "-Libro-\n%s\n\n" +
                         "Fecha inicio: %s\n" +
                         "Fecha fin: %s\n" +
                         "Estado: %s",
