@@ -53,13 +53,7 @@ public class Audiolibro extends Libro {
 
     @Override
     public String toString() {
-        return "Audiolibro{" +
-                "isbn='" + getISBN() + '\'' +
-                ", titulo='" + getTitulo() + '\'' +
-                ", anio=" + getAnio() +
-                ", categoria=" + getCategoria() +
-                ", duracion=" + formatearDuracion() +
-                ", formato='" + formato + '\'' +
-                '}';
+        return super.toString() +
+                String.format("\nDuración: %s\nFormato: %s", formatearDuracion(), formato);
     }
 }

@@ -135,6 +135,7 @@ public class Vista {
 
         for (Usuario u : usuarios) {
             System.out.println(u);
+            System.out.println("--------------------------------------------------");
         }
     }
 
@@ -165,6 +166,7 @@ public class Vista {
 
         for (Libro l : libros) {
             System.out.println(l);
+            System.out.println("--------------------------------------------------");
         }
     }
 
@@ -234,6 +236,7 @@ public class Vista {
 
         for (Prestamo p : prestamos) {
             System.out.println(p);
+            System.out.println("--------------------------------------------------");
         }
     }
     private void mostrarPrestamosUsuario() {
@@ -254,6 +257,7 @@ public class Vista {
 
         for (Prestamo p : prestamos) {
             System.out.println(p);
+            System.out.println("--------------------------------------------------");
         }
     }
 }

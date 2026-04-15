@@ -24,10 +24,10 @@ public class Consola {
         System.out.println("4 - Insertar libro");
         System.out.println("5 - Borrar libro");
         System.out.println("6 - Mostrar libros");
-        System.out.println("7 - Nuevo prestamo");
-        System.out.println("8 - Devolver prestamo");
+        System.out.println("7 - Nuevo préstamo");
+        System.out.println("8 - Devolver péstamo");
         System.out.println("9 - Mostrar todos los prestamos");
-        System.out.println("10 - Mostrar prestamos de un usuario");
+        System.out.println("10 - Mostrar préstamos de un usuario");
         System.out.print("Seleccione opción: ");
     }
 

@@ -135,6 +135,21 @@ public class Libro implements Comparable<Libro>{
         }
     }
 
+    private String formatearAutores() {
+        StringBuilder sb = new StringBuilder();
+
+        for (Autor autor : autores) {
+            if (autor != null) {
+                if (!sb.isEmpty()) {
+                    sb.append(", ");
+                }
+                sb.append(autor);
+            }
+        }
+
+        return sb.toString();
+    }
+
     //Overrides
     @Override
     public boolean equals(Object o) {
@@ -151,13 +166,14 @@ public class Libro implements Comparable<Libro>{
     //ToString
     @Override
     public String toString() {
-        return "Libro{" +
-                "isbn='" + isbn + '\'' +
-                ", titulo='" + titulo + '\'' +
-                ", anio=" + anio +
-                ", categoria=" + categoria +
-                ", autores=" + Arrays.toString(autores) +
-                '}';
+        return String.format(
+                "Título: %s\nAutor(es): %s\nAño: %d\nCategoría: %s\nISBN: %s",
+                titulo,
+                formatearAutores(),
+                anio,
+                categoria,
+                isbn
+        );
     }
 
     @Override

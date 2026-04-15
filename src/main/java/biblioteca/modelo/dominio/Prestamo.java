@@ -90,13 +90,22 @@ public class Prestamo implements Comparable<Prestamo> {
     //ToString
     @Override
     public String toString() {
-        return "Prestamo{" +
-                "libro=" + libro +
-                ", usuario=" + usuario +
-                ", inicio=" + inicio +
-                ", fin=" + fin +
-                ", devuelto=" + devuelto +
-                '}';
+
+        String estado = devuelto ? "Devuelto" : "Pendiente";
+
+        return String.format(
+                "=== PRÉSTAMO ===\n" +
+                        "Usuario:\n%s\n\n" +
+                        "Libro:\n%s\n\n" +
+                        "Fecha inicio: %s\n" +
+                        "Fecha fin: %s\n" +
+                        "Estado: %s",
+                usuario,
+                libro,
+                inicio,
+                (fin != null ? fin : "No devuelto"),
+                estado
+        );
     }
 
     @Override
