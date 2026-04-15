@@ -38,53 +38,62 @@ public class Libros {
     }
 
     public void alta(Libro libro) {
-        if (libro == null) {
-            throw new IllegalArgumentException("El libro no puede ser nulo");
-        }
 
-        if (buscar(libro) != null) {
-            throw new IllegalArgumentException("El libro ya existe");
+        if (libro == null) {
+            throw new IllegalArgumentException("El libro no puede ser nulo.");
         }
 
         String sqlLibro = """
-                INSERT INTO libro (isbn, titulo, anio, categoria)
-                VALUES (?, ?, ?, ?)
-                """;
+            INSERT INTO libro (isbn, titulo, anio, categoria)
+            VALUES (?, ?, ?, ?)
+            """;
 
         String sqlAudiolibro = """
-                INSERT INTO audiolibro (isbn, duracion_segundos, formato)
-                VALUES (?, ?, ?)
-                """;
+            INSERT INTO audiolibro (isbn, duracion_segundos, formato)
+            VALUES (?, ?, ?)
+            """;
 
+        // Libro
         try (PreparedStatement psLibro = conexion.prepareStatement(sqlLibro)) {
+
             psLibro.setString(1, libro.getISBN());
             psLibro.setString(2, libro.getTitulo());
             psLibro.setInt(3, libro.getAnio());
             psLibro.setString(4, libro.getCategoria().name());
             psLibro.executeUpdate();
+
         } catch (SQLException e) {
+
             if (e.getErrorCode() == 1062) {
-                throw new IllegalArgumentException("El libro ya existe");
+                throw new IllegalArgumentException("El libro ya existe.");
             }
+
             throw new RuntimeException("Error al insertar libro.", e);
         }
 
+        // Audiolibro
         if (libro instanceof Audiolibro audiolibro) {
+
             try (PreparedStatement psAudio = conexion.prepareStatement(sqlAudiolibro)) {
+
                 psAudio.setString(1, audiolibro.getISBN());
                 psAudio.setLong(2, audiolibro.getDuracion().getSeconds());
                 psAudio.setString(3, audiolibro.getFormato());
                 psAudio.executeUpdate();
+
             } catch (SQLException e) {
 
                 if (e.getErrorCode() == 1062) {
-                    throw new IllegalArgumentException("El audiolibro ya existe");
+                    throw new IllegalArgumentException("El audiolibro ya existe.");
                 }
+
                 throw new RuntimeException("Error al insertar audiolibro.", e);
             }
         }
 
+        // Autores
         for (Autor autor : libro.getAutores()) {
+
             if (autor != null) {
                 int idAutor = obtenerOCrearIdAutor(autor);
                 insertarLibroAutor(libro.getISBN(), idAutor);
@@ -188,41 +197,38 @@ public class Libros {
 
     private Libro crearLibro(String isbn, String titulo, int anio, Categoria categoria) throws SQLException {
 
-        // Validación de ISBN
-        if (isbn == null || isbn.trim().isEmpty()) {
-            throw new IllegalArgumentException("ISBN no puede ser nulo o vacío");
-        }
-
         String sql = """
-                SELECT duracion_segundos, formato
-                FROM audiolibro
-                WHERE isbn = ?
-                """;
+            SELECT duracion_segundos, formato
+            FROM audiolibro
+            WHERE isbn = ?
+            """;
+
+        Libro libro;
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+
             ps.setString(1, isbn);
 
             try (ResultSet rs = ps.executeQuery()) {
 
                 if (rs.next()) {
-
-                    long segundos = rs.getLong("duracion_segundos");
-                    String formato = rs.getString("formato");
-
-                    // ✔ La validación se delega al setter
-                    return new Audiolibro(
+                    libro = new Audiolibro(
                             isbn,
                             titulo,
                             anio,
                             categoria,
-                            Duration.ofSeconds(segundos),
-                            formato
+                            Duration.ofSeconds(rs.getLong("duracion_segundos")),
+                            rs.getString("formato")
                     );
+                } else {
+                    libro = new Libro(isbn, titulo, anio, categoria);
                 }
             }
         }
 
-        return new Libro(isbn, titulo, anio, categoria);
+        cargarAutores(libro);
+
+        return libro;
     }
 
     private void cargarAutores(Libro libro) throws SQLException {
@@ -251,6 +257,7 @@ public class Libros {
     }
 
     private int obtenerOCrearIdAutor(Autor autor) {
+
         Integer idAutor = buscarIdAutor(autor);
 
         if (idAutor != null) {
@@ -258,11 +265,12 @@ public class Libros {
         }
 
         String sql = """
-                INSERT INTO autor (nombre, apellidos, nacionalidad)
-                VALUES (?, ?, ?)
-                """;
+            INSERT INTO autor (nombre, apellidos, nacionalidad)
+            VALUES (?, ?, ?)
+            """;
 
         try (PreparedStatement ps = conexion.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+
             ps.setString(1, autor.getNombre());
             ps.setString(2, autor.getApellidos());
             ps.setString(3, autor.getNacionalidad());
@@ -277,6 +285,17 @@ public class Libros {
             throw new RuntimeException("No se pudo obtener el id del autor.");
 
         } catch (SQLException e) {
+
+            // Si ya existe (duplicado), lo buscamos otra vez
+            if (e.getErrorCode() == 1062) {
+
+                Integer idExistente = buscarIdAutor(autor);
+
+                if (idExistente != null) {
+                    return idExistente;
+                }
+            }
+
             throw new RuntimeException("Error al insertar autor.", e);
         }
     }

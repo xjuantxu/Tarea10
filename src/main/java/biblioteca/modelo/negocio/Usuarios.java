@@ -34,25 +34,25 @@ public class Usuarios {
     }
 
     public void alta(Usuario usuario) {
+
         if (usuario == null) {
             throw new IllegalArgumentException("El usuario no puede ser nulo");
         }
 
-        if (buscar(usuario) != null) {
-            throw new IllegalArgumentException("El usuario ya existe");
-        }
-
         String sqlUsuario = """
-                INSERT INTO usuario (dni, nombre, email)
-                VALUES (?, ?, ?)
-                """;
+            INSERT INTO usuario (dni, nombre, email)
+            VALUES (?, ?, ?)
+            """;
 
         String sqlDireccion = """
-                INSERT INTO direccion (dni, via, numero, cp, localidad)
-                VALUES (?, ?, ?, ?, ?)
-                """;
+            INSERT INTO direccion (dni, via, numero, cp, localidad)
+            VALUES (?, ?, ?, ?, ?)
+            """;
 
-        try (PreparedStatement psUsuario = conexion.prepareStatement(sqlUsuario); PreparedStatement psDireccion = conexion.prepareStatement(sqlDireccion)) {
+        try (
+                PreparedStatement psUsuario = conexion.prepareStatement(sqlUsuario);
+                PreparedStatement psDireccion = conexion.prepareStatement(sqlDireccion)
+        ) {
 
             psUsuario.setString(1, usuario.getDni());
             psUsuario.setString(2, usuario.getNombre());
@@ -70,7 +70,14 @@ public class Usuarios {
         } catch (SQLException e) {
 
             if (e.getErrorCode() == 1062) {
-                System.out.println("Error. El usuario ya existe");
+
+                String mensaje = e.getMessage().toLowerCase();
+
+                if (mensaje.contains("uk_usuario_email")) {
+                    throw new IllegalArgumentException("El email ya está en uso");
+                }
+
+                throw new IllegalArgumentException("El usuario ya existe (DNI duplicado)");
             }
 
             throw new RuntimeException("Error al insertar usuario.", e);
